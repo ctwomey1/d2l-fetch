@@ -1,0 +1,48 @@
+{
+  "name": "d2lfetch",
+  "version": "0.5.0",
+  "description": "Provides support for wrapping window.fetch calls within middleware functions",
+  "main": "index.js",
+  "author": "D2L Corporation",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "webpack -p",
+    "pretest": "npm run build",
+    "test:lint": "eslint src/ test/ --ext .js",
+    "test:no-lint": "cross-env LAUNCHPAD_BROWSERS=firefox wct --skip-plugin sauce -p",
+    "test": "npm run test:lint && npm run test:no-lint",
+    "publish-location": "node publishLocation | peanut-gallery -t $GITHUB_RELEASE_TOKEN -p",
+    "prepublish-release": "npm run build",
+    "publish-release": "frau-publisher && npm run publish-location"
+  },
+  "config": {
+    "frauPublisher": {
+      "files": "./dist/**",
+      "moduleType": "lib",
+      "targetDirectory": "d2lfetch",
+      "creds": {
+        "key": "AKIAJJFI4QSY4Y246MWA",
+        "secretVar": "CDN_SECRET"
+      },
+      "devTagVar": "TRAVIS_COMMIT",
+      "versionVar": "TRAVIS_TAG"
+    }
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-env": "^1.4.0",
+    "cross-env": "^4.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-brightspace": "^0.2.4",
+    "eslint-plugin-html": "^2.0.1",
+    "frau-ci": "^1.33.0",
+    "frau-publisher": "^2.6.2",
+    "peanut-gallery": "^1.2.0",
+    "web-component-tester": "^5.0.1",
+    "webpack": "^2.4.1"
+  },
+  "dependencies": {
+    "frau-jwt": "^2.0.0"
+  }
+}
