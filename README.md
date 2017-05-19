@@ -3,11 +3,15 @@ Provides support for wrapping window.fetch calls within middleware functions.
 
 ## Setup
 
-	yarn install
+```sh
+yarn install
+```
 
 ## Build
 
-	npm run build
+```sh
+npm run build
+```
 
 This creates files in the `/dist/` directory ready for consumption.
 
@@ -15,7 +19,9 @@ This creates files in the `/dist/` directory ready for consumption.
 
 Reference the script in your html:
 
-	<script src="../dist/d2lfetch.js"></script>
+```html
+<script src="../dist/d2lfetch.js"></script>
+```
 
 This will add a `d2lfetch` object to the global scope, with two methods: `use` and `fetch`.
 
@@ -28,7 +34,7 @@ you wish to exit the chain early your middleware should execute the next functio
 
 Example:
 
-```
+```js
 var myMiddlewareFunc = (request, next) => {
 	// Do something with the request, like maybe add a custom header
 	request.headers.set('X-My-Custom-Header', 'hello');
@@ -50,7 +56,7 @@ your desired output (keep in mind that callers are probably expecting it to cont
 
 Example:
 
-```
+```js
 var myEarlyExitFunc = (request, next) => {
 	// Check if we have a cached response for this request
 	if (CACHED_RESPONSES[request.url]) {
@@ -73,7 +79,7 @@ Use the `fetch` function to execute the middleware chain followed by a [`window.
 
 Example:
 
-```
+```js
 window.d2lfetch.use(myMiddlewareFunc);
 
 window.d2lfetch.fetch(new Request('http://www.example.com/api/stuff'))
