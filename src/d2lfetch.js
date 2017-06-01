@@ -5,7 +5,7 @@ export class D2LFetch {
 	}
 
 	fetch(input, options) {
-		if (typeof input === 'string') {
+		if ('string' === typeof input) {
 			input = new Request(input, options);
 		}
 		if (false === input instanceof Request) {
