@@ -94,7 +94,7 @@ describe('d2l-fetch', function() {
 				var options = { method: 'PUT' };
 				return window.d2lfetch.fetch(url, options)
 					.then(function() {
-						expect(window.fetch).to.be.calledWith(sinon.match.has('url', sinon.match(/\/path\/to\/data/)));
+						expect(window.fetch).to.be.calledWith(sinon.match.has('url', sinon.match(/\/path\/to\/data$/)));
 						expect(window.fetch).to.be.calledWith(sinon.match.has('method', 'PUT'));
 					});
 			});
