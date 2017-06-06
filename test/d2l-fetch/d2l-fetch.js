@@ -4,7 +4,6 @@ var invalidRequestInputs = [
 	undefined,
 	null,
 	1,
-	'hello',
 	{},
 	{ whatiam: 'is not a Request'}
 ];
@@ -73,7 +72,7 @@ describe('d2l-fetch', function() {
 		});
 
 		invalidRequestInputs.forEach(function(input) {
-			it('should throw a TypeError if it is not passed a Request object', function() {
+			it('should throw a TypeError if it is not passed a Request object or the provided input cannot be used to create a new Request object', function() {
 				return window.d2lfetch.fetch(input)
 					.then((function() { expect.fail(); }), function(err) { expect(err instanceof TypeError).to.equal(true); });
 			});
@@ -86,6 +85,17 @@ describe('d2l-fetch', function() {
 				return window.d2lfetch.fetch(req)
 					.then(function() {
 						expect(window.fetch).to.be.calledWith(req);
+					});
+			});
+
+			it('should call window.fetch with a request object created from the provided url and options', function() {
+				expect(window.d2lfetch._installedMiddlewares.length).to.equal(0);
+				var url = '/path/to/data';
+				var options = { method: 'PUT' };
+				return window.d2lfetch.fetch(url, options)
+					.then(function() {
+						expect(window.fetch).to.be.calledWith(sinon.match.has('url', sinon.match(/\/path\/to\/data$/)));
+						expect(window.fetch).to.be.calledWith(sinon.match.has('method', 'PUT'));
 					});
 			});
 		});

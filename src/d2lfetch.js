@@ -4,14 +4,17 @@ export class D2LFetch {
 		this._installedMiddlewares = [];
 	}
 
-	fetch(request) {
-		if (false === request instanceof Request) {
-			return Promise.reject(new TypeError('Invalid request argument supplied; must be a valid window.Request object.'));
+	fetch(input, options) {
+		if ('string' === typeof input) {
+			input = new Request(input, options);
+		}
+		if (false === input instanceof Request) {
+			return Promise.reject(new TypeError('Invalid input argument(s) supplied.'));
 		}
 
 		const chain = this._installedMiddlewares.slice();
 		chain.push(this._wrapMiddleware(window.fetch));
-		return chain.shift().bind(this, chain)(request);
+		return chain.shift().bind(this, chain)(input);
 	}
 
 	use(fn) {
