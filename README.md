@@ -48,7 +48,7 @@ var myMiddlewareFunc = (request, next) => {
 	return response;
 };
 
-window.d2lfetch.use(myMiddlewareFunc);
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 ```
 
 If you do wish to exit the chain early no further middleware will be executed, nor will the `window.fetch` call. You should return a Promise with
@@ -69,8 +69,8 @@ var myEarlyExitFunc = (request, next) => {
 	return next(request);
 };
 
-window.d2lfetch.use(myEarlyExitFunc);
-window.d2lfetch.use(myMiddlewareFunc); // this may never get called
+window.d2lfetch.use({name: 'myEarlyExitName', fn: myEarlyExitFunc});
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc}); // this may never get called
 ```
 
 ### Fetch
@@ -80,7 +80,7 @@ Use the `fetch` function to execute the middleware chain followed by a [`window.
 Example:
 
 ```js
-window.d2lfetch.use(myMiddlewareFunc);
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 
 window.d2lfetch.fetch(new Request('http://www.example.com/api/stuff'))
 	.then(function(response) {
