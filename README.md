@@ -91,9 +91,9 @@ window.d2lfetch.fetch(new Request('http://www.example.com/api/stuff'))
 	});
 ```
 
-### With
+### WithMiddleware
 
-Use the `with` function to temporarily add middleware to the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+Use the `withMiddleware` function to temporarily add middleware to the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
 
 Example:
 
@@ -101,7 +101,7 @@ Example:
 window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 
 window.d2lfetch
-	.with({
+	.withMiddleware({
 		name: 'addedMiddlewareName',
 		fn: function() {
 			// added middleware functionality
@@ -116,9 +116,9 @@ window.d2lfetch
 	});
 ```
 
-### Without
+### WithoutMiddleware
 
-Use the `without` function to temporarily remove a specified middleware from the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+Use the `withoutMiddleware` function to temporarily remove a specified middleware from the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
 
 Example:
 
@@ -126,7 +126,7 @@ Example:
 window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 
 window.d2lfetch
-	.without('myMiddlewareName')
+	.withoutMiddleware('myMiddlewareName')
 	.fetch(new Request('http://www.example.com/api/stuff'))
 	.then(function(response) {
 		// do something with the response

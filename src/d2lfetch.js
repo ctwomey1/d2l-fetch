@@ -21,7 +21,7 @@ export class D2LFetch {
 		this._installedMiddlewares.push({name, fn: this._wrapMiddleware(fn)});
 	}
 
-	with({name, fn} = {}) {
+	withMiddleware({name, fn} = {}) {
 		const self = new D2LFetch();
 		self._installedMiddlewares = this._installedMiddlewares.slice();
 		if (name && fn) {
@@ -30,7 +30,7 @@ export class D2LFetch {
 		return self;
 	}
 
-	without(name) {
+	withoutMiddleware(name) {
 		const self = new D2LFetch();
 		self._installedMiddlewares = this._installedMiddlewares.filter(middleware => middleware.name !== name);
 		return self;

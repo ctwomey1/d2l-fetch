@@ -169,7 +169,7 @@ describe('d2l-fetch', function() {
 		});
 	});
 
-	describe('.with', function() {
+	describe('.withMiddleware', function() {
 		var windowFetchResponse = Promise.resolve(new Response());
 		var secondMiddleware = function(request, next) {
 			return next(request);
@@ -183,32 +183,32 @@ describe('d2l-fetch', function() {
 		});
 
 		it('should be a public function', function() {
-			expect(window.d2lfetch.with instanceof Function).to.equal(true);
+			expect(window.d2lfetch.withMiddleware instanceof Function).to.equal(true);
 		});
 
 		it('should return a new D2LFetch object', function() {
-			expect(window.d2lfetch.with({name: 'test', fn: function() {}})).not.to.equal(window.d2lfetch);
+			expect(window.d2lfetch.withMiddleware({name: 'test', fn: function() {}})).not.to.equal(window.d2lfetch);
 		});
 
 		it('should return a new D2LFetch object with a different set of middleware', function() {
-			expect(window.d2lfetch.with({name: 'test', fn: function() {}})._installedMiddlewares).not.to.equal(window.d2lfetch._installedMiddlewares);
+			expect(window.d2lfetch.withMiddleware({name: 'test', fn: function() {}})._installedMiddlewares).not.to.equal(window.d2lfetch._installedMiddlewares);
 		});
 
 		it('should add a new middleware to installed middlewares of the new D2LFetch object', function() {
 			expect(window.d2lfetch._installedMiddlewares).to.be.empty;
-			expect(window.d2lfetch.with({name: 'test', fn: function() {}})._installedMiddlewares).to.have.lengthOf(1);
+			expect(window.d2lfetch.withMiddleware({name: 'test', fn: function() {}})._installedMiddlewares).to.have.lengthOf(1);
 		});
 
 		it('should add new middleware after all other middlewares', function() {
 			window.d2lfetch.use({name: 'passthroughSpy', fn: passthroughSpy});
-			window.d2lfetch.with({name: 'anotherSpy', fn: anotherSpy}).fetch(getRequest());
+			window.d2lfetch.withMiddleware({name: 'anotherSpy', fn: anotherSpy}).fetch(getRequest());
 			expect(passthroughSpy).to.be.calledBefore(anotherSpy);
 		});
 
 		it('should be able to be chain called multiple times', function() {
 			window.d2lfetch
-				.with({name: 'passthroughSpy', fn: passthroughSpy})
-				.with({name: 'anotherSpy', fn: anotherSpy})
+				.withMiddleware({name: 'passthroughSpy', fn: passthroughSpy})
+				.withMiddleware({name: 'anotherSpy', fn: anotherSpy})
 				.fetch(getRequest());
 			expect(anotherSpy).to.be.called;
 			expect(passthroughSpy).to.be.calledBefore(anotherSpy);
@@ -216,14 +216,14 @@ describe('d2l-fetch', function() {
 
 		it('should be able to be chain called with D2lFetch.without', function() {
 			window.d2lfetch
-				.with({name: 'passthroughSpy', fn: passthroughSpy})
-				.without('passthroughSpy')
+				.withMiddleware({name: 'passthroughSpy', fn: passthroughSpy})
+				.withoutMiddleware('passthroughSpy')
 				.fetch();
 			expect(passthroughSpy).not.to.be.called;
 		});
 	});
 
-	describe('.without', function() {
+	describe('.withoutMiddleware', function() {
 		var windowFetchResponse = Promise.resolve(new Response());
 		var secondMiddleware = function(request, next) {
 			return next(request);
@@ -237,20 +237,20 @@ describe('d2l-fetch', function() {
 		});
 
 		it('should be a public function', function() {
-			expect(window.d2lfetch.without instanceof Function).to.equal(true);
+			expect(window.d2lfetch.withoutMiddleware instanceof Function).to.equal(true);
 		});
 
 		it('should return a new D2LFetch object', function() {
-			expect(window.d2lfetch.without({name: 'test', fn: function() {}})).not.to.equal(window.d2lfetch);
+			expect(window.d2lfetch.withoutMiddleware({name: 'test', fn: function() {}})).not.to.equal(window.d2lfetch);
 		});
 
 		it('should return a new D2LFetch object with a different set of middleware', function() {
-			expect(window.d2lfetch.without({name: 'test', fn: function() {}})._installedMiddlewares).not.to.equal(window.d2lfetch._installedMiddlewares);
+			expect(window.d2lfetch.withoutMiddleware({name: 'test', fn: function() {}})._installedMiddlewares).not.to.equal(window.d2lfetch._installedMiddlewares);
 		});
 
 		it('should remove a specified installed middleware', function() {
 			window.d2lfetch.use({name: 'passthroughSpy', fn: passthroughSpy});
-			window.d2lfetch.without('passthroughSpy').fetch(getRequest());
+			window.d2lfetch.withoutMiddleware('passthroughSpy').fetch(getRequest());
 			expect(passthroughSpy).not.to.be.called;
 		});
 
@@ -258,8 +258,8 @@ describe('d2l-fetch', function() {
 			window.d2lfetch.use({name: 'passthroughSpy', fn: passthroughSpy});
 			window.d2lfetch.use({name: 'anotherSpy', fn: anotherSpy});
 			window.d2lfetch
-				.without('passthroughSpy')
-				.without('anotherSpy')
+				.withoutMiddleware('passthroughSpy')
+				.withoutMiddleware('anotherSpy')
 				.fetch(getRequest());
 			expect(passthroughSpy).not.to.be.called;
 			expect(anotherSpy).not.to.be.called;
