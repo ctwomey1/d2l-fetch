@@ -91,6 +91,51 @@ window.d2lfetch.fetch(new Request('http://www.example.com/api/stuff'))
 	});
 ```
 
+### With
+
+Use the `with` function to temporarily add middleware to the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+
+Example:
+
+```js
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
+
+window.d2lfetch
+	.with({
+		name: 'addedMiddlewareName',
+		fn: function() {
+			// added middleware functionality
+		}
+	})
+	.fetch(new Request('http://www.example.com/api/stuff'))
+	.then(function(response) {
+		// do something with the response
+	})
+	.catch(function(reason) {
+		console.log(reason);
+	});
+```
+
+### Without
+
+Use the `without` function to temporarily remove a specified middleware from the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+
+Example:
+
+```js
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
+
+window.d2lfetch
+	.without('myMiddlewareName')
+	.fetch(new Request('http://www.example.com/api/stuff'))
+	.then(function(response) {
+		// do something with the response
+	})
+	.catch(function(reason) {
+		console.log(reason);
+	});
+```
+
 ## Browser compatibility
 
 `d2l-fetch` makes use of two javascript features that are not yet fully supported across all modern browsers: the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) and [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise). If you need to support browsers that do not yet implement these features you will need to include polyfills for this functionality.
