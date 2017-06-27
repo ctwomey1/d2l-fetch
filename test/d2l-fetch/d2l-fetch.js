@@ -214,7 +214,7 @@ describe('d2l-fetch', function() {
 			expect(passthroughSpy).to.be.calledBefore(anotherSpy);
 		});
 
-		it('should be able to be chain called with D2lFetch.without', function() {
+		it('should be able to be chain called with D2lFetch.withoutMiddleware', function() {
 			window.d2lfetch
 				.withMiddleware({name: 'passthroughSpy', fn: passthroughSpy})
 				.withoutMiddleware('passthroughSpy')
