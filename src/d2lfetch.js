@@ -21,10 +21,12 @@ export class D2LFetch {
 		this._installedMiddlewares.push({name, fn: this._wrapMiddleware(fn)});
 	}
 
-	with({name, fn}) {
+	with({name, fn} = {}) {
 		const self = new D2LFetch();
 		self._installedMiddlewares = this._installedMiddlewares.slice();
-		self._installedMiddlewares.unshift({name, fn: this._wrapMiddleware(fn)});
+		if (name && fn) {
+			self._installedMiddlewares.push({name, fn: self._wrapMiddleware(fn)});
+		}
 		return self;
 	}
 
