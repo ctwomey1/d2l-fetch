@@ -13,19 +13,32 @@ export class D2LFetch {
 		}
 
 		const chain = this._installedMiddlewares.slice();
-		chain.push(this._wrapMiddleware(window.fetch));
-		return chain.shift().bind(this, chain)(input);
+		chain.push({name: 'fetch', fn: this._wrapMiddleware(window.fetch)});
+		return chain.shift().fn.bind(this, chain)(input);
 	}
 
-	use(fn) {
-		this._installedMiddlewares.push(this._wrapMiddleware(fn));
+	use({name, fn}) {
+		this._installedMiddlewares.push({name, fn: this._wrapMiddleware(fn)});
+	}
+
+	with({name, fn}) {
+		const self = new D2LFetch();
+		self._installedMiddlewares = this._installedMiddlewares.slice();
+		self._installedMiddlewares.unshift({name, fn: this._wrapMiddleware(fn)});
+		return self;
+	}
+
+	without(name) {
+		const self = new D2LFetch();
+		self._installedMiddlewares = this._installedMiddlewares.filter(middleware => middleware.name !== name);
+		return self;
 	}
 
 	_wrapMiddleware(fn) {
 		return (chain, request) => {
 			let next;
 			if (chain && chain.length !== 0) {
-				next = chain.shift().bind(this, chain);
+				next = chain.shift().fn.bind(this, chain);
 			}
 			return fn(request, next);
 		};
