@@ -254,6 +254,14 @@ describe('d2l-fetch', function() {
 			expect(passthroughSpy).to.be.calledBefore(anotherSpy);
 		});
 
+		it('should not affect window.d2lfetch functionality', function() {
+			window.d2lfetch.use({ name: 'passthroughSpy', fn: passthroughSpy });
+			window.d2lfetch.addTemp({ name: 'anotherSpy', fn: anotherSpy });
+			window.d2lfetch.fetch(getRequest());
+			expect(passthroughSpy).to.be.called;
+			expect(anotherSpy).not.to.be.called;
+		});
+
 		it('should be able to be chain called multiple times', function() {
 			window.d2lfetch
 				.addTemp({ name: 'passthroughSpy', fn: passthroughSpy })
@@ -325,6 +333,13 @@ describe('d2l-fetch', function() {
 			window.d2lfetch.removeTemp('notThereMiddleware').fetch(getRequest());
 			expect(passthroughSpy).to.be.called;
 			expect(anotherSpy).to.be.called;
+		});
+
+		it('should not affect window.d2lfetch functionality', function() {
+			window.d2lfetch.use({ name: 'passthroughSpy', fn: passthroughSpy });
+			window.d2lfetch.removeTemp('passthroughSpy');
+			window.d2lfetch.fetch(getRequest());
+			expect(passthroughSpy).to.be.called;
 		});
 
 		it('should be able to be chain called', function() {
