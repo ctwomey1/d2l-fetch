@@ -48,7 +48,7 @@ var myMiddlewareFunc = (request, next) => {
 	return response;
 };
 
-window.d2lfetch.use(myMiddlewareFunc);
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 ```
 
 If you do wish to exit the chain early no further middleware will be executed, nor will the `window.fetch` call. You should return a Promise with
@@ -69,8 +69,8 @@ var myEarlyExitFunc = (request, next) => {
 	return next(request);
 };
 
-window.d2lfetch.use(myEarlyExitFunc);
-window.d2lfetch.use(myMiddlewareFunc); // this may never get called
+window.d2lfetch.use({name: 'myEarlyExitName', fn: myEarlyExitFunc});
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc}); // this may never get called
 ```
 
 ### Fetch
@@ -80,9 +80,83 @@ Use the `fetch` function to execute the middleware chain followed by a [`window.
 Example:
 
 ```js
-window.d2lfetch.use(myMiddlewareFunc);
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
 
 window.d2lfetch.fetch(new Request('http://www.example.com/api/stuff'))
+	.then(function(response) {
+		// do something with the response
+	})
+	.catch(function(reason) {
+		console.log(reason);
+	});
+```
+
+### AddTemp
+
+Use the `addTemp` function to temporarily add middleware to the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+
+Example:
+
+```js
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
+
+window.d2lfetch
+	.addTemp({
+		name: 'addedMiddlewareName',
+		fn: function() {
+			// added middleware functionality
+		}
+	})
+	.fetch(new Request('http://www.example.com/api/stuff'))
+	.then(function(response) {
+		// do something with the response
+	})
+	.catch(function(reason) {
+		console.log(reason);
+	});
+```
+
+### RemoveTemp
+
+Use the `removeTemp` function to temporarily remove a specified middleware from the middleware chain. Returns a new `D2LFetch` object with the updated middleware chain.
+
+Example:
+
+```js
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
+
+window.d2lfetch
+	.removeTemp('myMiddlewareName')
+	.fetch(new Request('http://www.example.com/api/stuff'))
+	.then(function(response) {
+		// do something with the response
+	})
+	.catch(function(reason) {
+		console.log(reason);
+	});
+```
+
+`addTemp` and `removeTemp` can be chain called together like so:
+
+```js
+window.d2lfetch.use({name: 'myMiddlewareName', fn: myMiddlewareFunc});
+
+window.d2lfetch
+	.addTemp({
+		name: 'tempMiddlewareName',
+		fn: function() {
+			// ...
+		}
+	})
+	.addTemp(
+		{
+		name: 'moreTempMiddlewareName',
+		fn: function() {
+			// ...
+		}
+	})
+	.removeTemp('myMiddlewareName')
+	.fetch(new Request('http://www.example.com/api/stuff'))
 	.then(function(response) {
 		// do something with the response
 	})
