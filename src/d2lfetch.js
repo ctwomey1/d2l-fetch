@@ -24,21 +24,21 @@ export class D2LFetch {
 
 	addTemp(middleware) {
 		const {name, fn} = this._verifyMiddleware(middleware);
-		const self = new D2LFetch();
+		const newFetch = new D2LFetch();
 
-		self._installedMiddlewares = this._installedMiddlewares.slice();
-		self._installedMiddlewares.push({ name, fn: self._wrapMiddleware(fn) });
+		newFetch._installedMiddlewares = this._installedMiddlewares.slice();
+		newFetch._installedMiddlewares.push({ name, fn: newFetch._wrapMiddleware(fn) });
 
-		return self;
+		return newFetch;
 	}
 
 	removeTemp(name) {
 		if (!name || typeof name !== 'string') {
-			throw TypeError('Middleware name must be a non-empty string');
+			throw TypeError('Parameter "name" must be a non-empty string');
 		}
-		const self = new D2LFetch();
-		self._installedMiddlewares = this._installedMiddlewares.filter(middleware => middleware.name !== name);
-		return self;
+		const newFetch = new D2LFetch();
+		newFetch._installedMiddlewares = this._installedMiddlewares.filter(middleware => middleware.name !== name);
+		return newFetch;
 	}
 
 	_wrapMiddleware(fn) {
@@ -52,16 +52,18 @@ export class D2LFetch {
 	}
 
 	_verifyMiddleware(middleware) {
-		if (middleware && typeof middleware === 'object') {
-			const {name, fn} = middleware;
-			if (name && typeof name === 'string' &&
-				fn && typeof fn === 'function') {
-				return middleware;
-			} else {
-				throw TypeError('Middleware name/function is undefined or not a string/function');
-			}
-		} else {
-			throw TypeError('Middleware parameter is undefined/null/empty or not an object');
+		if (!middleware || 'object' !== typeof middleware) {
+			throw TypeError('Parameter "middleware" must be an object');
 		}
+
+		const {name, fn} = middleware;
+		if (!name || 'string' !== typeof name) {
+			throw TypeError('Parameter "middleware.name" must be a non-empty string');
+		}
+		if (!fn || 'function' !== typeof fn) {
+			throw TypeError('Parameter "middleware.fn" must be a function');
+		}
+
+		return middleware;
 	}
 }
