@@ -80,6 +80,13 @@ describe('d2l-fetch', function() {
 			expect(window.d2lfetch._wrapMiddleware).to.be.calledWith(passthroughMiddleware);
 		});
 
+		it('should pass optional use options in to the wrap function', function() {
+			const useOptions = { found: true };
+			sandbox.spy(window.d2lfetch, '_wrapMiddleware');
+			window.d2lfetch.use({ name: 'passthroughMiddleware', fn: passthroughMiddleware, options: useOptions });
+			expect(window.d2lfetch._wrapMiddleware).to.be.calledWith(passthroughMiddleware, useOptions);
+		});
+
 		it('should add the wrapped function to the _installedMiddlewares array', function() {
 			expect(window.d2lfetch._installedMiddlewares.length).to.equal(0);
 			window.d2lfetch.use({ name: 'passthroughMiddleware', fn: passthroughMiddleware });
@@ -170,6 +177,13 @@ describe('d2l-fetch', function() {
 				var response = window.d2lfetch.fetch(getRequest());
 				expect(response).to.equal(windowFetchResponse);
 			});
+
+			it('should pass provided options to the middleware function when calling it', function() {
+				const useOptions = { found: true };
+				window.d2lfetch.use({ name: 'passthroughSpy', fn: passthroughSpy, options: useOptions });
+				window.d2lfetch.fetch(getRequest());
+				expect(passthroughSpy.getCall(0).args[2]).to.equal(useOptions);
+			});
 		});
 
 		describe('when multiple middlewares are use\'d', function() {
@@ -208,6 +222,18 @@ describe('d2l-fetch', function() {
 				expect(passthroughSpy).to.be.calledBefore(anotherSpy);
 				expect(anotherSpy).to.be.calledBefore(window.fetch);
 				expect(window.fetch).to.be.called;
+			});
+
+			it('should pass the appropriate use options to each middleware function when called', function() {
+				const passthroughSpyOptions = { found: true };
+				const earlyExitSpyOptions = { found: false };
+				window.d2lfetch.use({ name: 'passthroughSpy', fn: passthroughSpy, options: passthroughSpyOptions });
+				window.d2lfetch.use({ name: 'anotherSpy', fn: anotherSpy });
+				window.d2lfetch.use({ name: 'earlyExitSpy', fn: earlyExitSpy, options: earlyExitSpyOptions });
+				window.d2lfetch.fetch(getRequest());
+				expect(passthroughSpy.getCall(0).args[2]).to.equal(passthroughSpyOptions);
+				expect(anotherSpy.getCall(0).args[2]).to.be.undefined;
+				expect(earlyExitSpy.getCall(0).args[2]).to.equal(earlyExitSpyOptions);
 			});
 		});
 	});

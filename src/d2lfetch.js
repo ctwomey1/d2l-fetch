@@ -18,16 +18,16 @@ export class D2LFetch {
 	}
 
 	use(middleware) {
-		const {name, fn} = this._verifyMiddleware(middleware);
-		this._installedMiddlewares.push({ name, fn: this._wrapMiddleware(fn) });
+		const {name, fn, options} = this._verifyMiddleware(middleware);
+		this._installedMiddlewares.push({ name, fn: this._wrapMiddleware(fn, options) });
 	}
 
 	addTemp(middleware) {
-		const {name, fn} = this._verifyMiddleware(middleware);
+		const {name, fn, options} = this._verifyMiddleware(middleware);
 		const self = new D2LFetch();
 
 		self._installedMiddlewares = this._installedMiddlewares.slice();
-		self._installedMiddlewares.push({ name, fn: self._wrapMiddleware(fn) });
+		self._installedMiddlewares.push({ name, fn: self._wrapMiddleware(fn, options) });
 
 		return self;
 	}
@@ -41,13 +41,13 @@ export class D2LFetch {
 		return self;
 	}
 
-	_wrapMiddleware(fn) {
+	_wrapMiddleware(fn, options) {
 		return (chain, request) => {
 			let next;
 			if (chain && chain.length !== 0) {
 				next = chain.shift().fn.bind(this, chain);
 			}
-			return fn(request, next);
+			return fn(request, next, options);
 		};
 	}
 
