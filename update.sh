@@ -53,6 +53,6 @@ echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetc
 git remote add upstream "https://${GH_TOKEN}@github.com/Brightspace/d2l-fetch.git"
 git config --global user.email "travis@travis-ci.com"
 git config --global user.name "Travis CI"
-git add d2l-fetch.html
+git add .
 git commit -m "${commitSlug} Update d2l-fetch.html to v${newVersion}"
 git push upstream HEAD:master
