@@ -1,22 +1,15 @@
 #!/bin/bash
 set -e
 
-if ! [ "$TRAVIS_BRANCH" == "master" ]; then
-	echo "d2l-fetch.html is only updated on master"
-	exit 0
-fi
-
-if ! [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-	echo "d2l-fetch.html is not updated on pull requests"
+if ! [ "$TRAVIS_BRANCH" == "master" ] || ! [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+	echo "Version is only bumped on master"
 	exit 0
 fi
 
 lastVersion=$(git describe --abbrev=0)
-echo "Last version was" $lastVersion
-
 versionRegex='^([0-9]+)\.([0-9]+)\.([0-9]+)$'
 if ! [[ $lastVersion =~ $versionRegex ]]; then
-	echo $lastVersion "is not a valid semver string according to this shitty regex"
+	echo $lastVersion "is not a valid semver string"
 	exit 1
 fi
 
@@ -24,40 +17,41 @@ majorVersion=${BASH_REMATCH[1]}
 minorVersion=${BASH_REMATCH[2]}
 patchVersion=${BASH_REMATCH[3]}
 
-# Uses syntax from https://github.com/Brightspace/frau-ci/blob/master/lib/travis-ci/update-version.js
-logMessage=$(git log -1 --pretty=format:%s%b)
-majorRegex='increment major'
-patchRegex='increment patch'
-commitSlug=""
-if [[ $logMessage =~ $majorRegex ]]; then
-	echo "Incrementing major version"
+lastLogMessage=$(git log -1 --pretty=format:%s%b)
+majorRegex='\[increment major\]'
+patchRegex='\[increment patch\]'
+if [[ $lastLogMessage =~ $majorRegex ]]; then
 	majorVersion=$((majorVersion + 1))
-	commitSlug="[increment major]"
-elif [[ $logMessage =~ $patchRegex ]]; then
-	echo "Incrementing patch version"
+elif [[ $lastLogMessage =~ $patchRegex ]]; then
 	patchVersion=$((patchVersion + 1))
-	commitSlug="[increment patch]"
 else
-	echo "Incrementing minor version"
 	minorVersion=$((minorVersion + 1))
-	commitSlug="[increment minor]"
 fi
 
 newVersion="${majorVersion}.${minorVersion}.${patchVersion}"
 
-echo "New version is" $newVersion
+echo "Updating from ${lastVersion} to ${newVersion}"
 
 echo "<!-- CHANGES TO THIS FILE WILL BE LOST - IT IS AUTOMATICALLY GENERATED WHEN d2l-fetch IS RELEASED -->" > d2l-fetch.html
 echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetch.js\"></script>" >> d2l-fetch.html
 
-# Add the upstream using GH_TOKEN
-git remote add upstream "https://${GH_TOKEN}@github.com/Brightspace/d2l-fetch.git"
+# Add the upstream using GITHUB_RELEASE_TOKEN
+git remote add upstream "https://${GITHUB_RELEASE_TOKEN}@github.com/Brightspace/d2l-fetch.git"
+
 # Pull the merge commit
 git pull upstream master
+
 # Set config so this commit shows up as coming from Travis
 git config --global user.email "travis@travis-ci.com"
 git config --global user.name "Travis CI"
-# Add everything, commit, push
+
+# Add the updated d2l-fetch.html, and add a new tag to create the release
 git add .
-git commit -m "${commitSlug} Update d2l-fetch.html to v${newVersion} [skip ci]"
-git push upstream HEAD:master
+git commit -m "[skip ci] Update to ${newVersion}"
+git tag -a ${newVersion} -m "${newVersion} - $(git log -1 --pretty=format:%s)"
+
+git push upstream HEAD:master --tags
+
+# Publish the release via frau-publisher
+export TRAVIS_TAG=$newVersion
+npm run publish-release
