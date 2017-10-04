@@ -25,6 +25,18 @@ Reference the script in your html:
 
 This will add a `d2lfetch` object to the global scope, with two methods: `use` and `fetch`.
 
+Alternatively, you can install `d2l-fetch` via bower:
+
+```sh
+bower install Brightspace/d2l-fetch
+```
+
+and reference it as you would any other package:
+
+```html
+<link rel="import" href="../d2l-fetch/d2l-fetch.html">
+```
+
 ### Use
 
 Use the 'use' function to append functions to the middleware chain. These functions will be executed in the order they are 'use'd.
