@@ -5,7 +5,7 @@ script:
 - npm run test:lint
 - wct --skip-plugin local
 - ./update.sh
-- 'if [ "$TRAVIS_BRANCH" == "master" ]; then frauci-update-version && export TRAVIS_TAG=$(frauci-get-version) && npm run build && npm run publish-release; fi'
+# - 'if [ "$TRAVIS_BRANCH" == "master" ]; then frauci-update-version && export TRAVIS_TAG=$(frauci-get-version) && npm run build && npm run publish-release; fi'
 env:
   global:
   - REPO_NAME=d2l-fetch
