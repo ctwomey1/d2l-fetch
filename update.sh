@@ -50,14 +50,14 @@ echo "New version is" $newVersion
 echo "<!-- CHANGES TO THIS FILE WILL BE LOST - IT IS AUTOMATICALLY GENERATED WHEN d2l-fetch IS RELEASED -->" > d2l-fetch.html
 echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetch.js\"></script>" >> d2l-fetch.html
 
-# Pull the merge commit
-git pull
 # Add the upstream using GH_TOKEN
 git remote add upstream "https://${GH_TOKEN}@github.com/Brightspace/d2l-fetch.git"
+# Pull the merge commit
+git pull upstream master
 # Set config so this commit shows up as coming from Travis
 git config --global user.email "travis@travis-ci.com"
 git config --global user.name "Travis CI"
 # Add everything, commit, push
 git add .
-git commit -m "${commitSlug} Update d2l-fetch.html to v${newVersion}"
-git push upstream HEAD:master
+git commit -m "${commitSlug} Update d2l-fetch.html to v${newVersion} [skip ci]"
+git push upstream master
