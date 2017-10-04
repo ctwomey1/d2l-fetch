@@ -30,25 +30,27 @@ fi
 
 newVersion="${majorVersion}.${minorVersion}.${patchVersion}"
 
-echo "Updating from ${lastVersion} to ${newVersion}"
-
-echo "<!-- CHANGES TO THIS FILE WILL BE LOST - IT IS AUTOMATICALLY GENERATED WHEN d2l-fetch IS RELEASED -->" > d2l-fetch.html
-echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetch.js\"></script>" >> d2l-fetch.html
-
 # Add the upstream using GITHUB_RELEASE_TOKEN
 git remote add upstream "https://${GITHUB_RELEASE_TOKEN}@github.com/Brightspace/d2l-fetch.git"
 
 # Pull the merge commit
 git pull upstream master
+git checkout upstream/master
 
 # Set config so this commit shows up as coming from Travis
 git config --global user.email "travis@travis-ci.com"
 git config --global user.name "Travis CI"
 
+echo "Updating from ${lastVersion} to ${newVersion}"
+echo "<!-- CHANGES TO THIS FILE WILL BE LOST - IT IS AUTOMATICALLY GENERATED WHEN d2l-fetch IS RELEASED -->" > d2l-fetch.html
+echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetch.js\"></script>" >> d2l-fetch.html
+
 # Add the updated d2l-fetch.html, and add a new tag to create the release
 git add .
 git commit -m "[skip ci] Update to ${newVersion}"
 git tag -a ${newVersion} -m "${newVersion} - $(git log -1 --pretty=format:%s)"
+
+git status
 
 git push upstream HEAD:master --tags
 
