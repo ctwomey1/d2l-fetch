@@ -18,6 +18,8 @@ minorVersion=${BASH_REMATCH[2]}
 patchVersion=${BASH_REMATCH[3]}
 
 lastLogMessage=$(git log -1 --pretty=format:%s%b)
+lastLogMessageShort=$(git log -1 --pretty=format:%s)
+
 majorRegex='\[increment major\]'
 patchRegex='\[increment patch\]'
 if [[ $lastLogMessage =~ $majorRegex ]]; then
@@ -48,7 +50,7 @@ echo "<script src=\"https://s.brightspace.com/lib/d2lfetch/"$newVersion"/d2lfetc
 # Add the updated d2l-fetch.html, and add a new tag to create the release
 git add .
 git commit -m "[skip ci] Update to ${newVersion}"
-git tag -a ${newVersion} -m "${newVersion} - $(git log -1 --pretty=format:%s)"
+git tag -a ${newVersion} -m "${newVersion} - ${lastLogMessageShort}"
 
 git status
 
