@@ -38,7 +38,6 @@
     "eslint": "^3.19.0",
     "eslint-config-brightspace": "^0.2.4",
     "eslint-plugin-html": "^2.0.1",
-    "frau-ci": "^1.33.0",
     "frau-publisher": "^2.6.2",
     "gulp": "^3.9.1",
     "gulp-change": "^1.0.0",
