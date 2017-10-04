@@ -6,6 +6,11 @@ if ! [ "$TRAVIS_BRANCH" == "master" ]; then
 	exit 0
 fi
 
+if ! [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+	echo "d2l-fetch.html is not updated on pull requests"
+	exit 0
+fi
+
 lastVersion=$(git describe --abbrev=0)
 echo "Last version was" $lastVersion
 
