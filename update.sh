@@ -60,4 +60,4 @@ git config --global user.name "Travis CI"
 # Add everything, commit, push
 git add .
 git commit -m "${commitSlug} Update d2l-fetch.html to v${newVersion} [skip ci]"
-git push upstream master
+git push upstream HEAD:master
