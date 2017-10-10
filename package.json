@@ -11,7 +11,7 @@
     "test:lint": "eslint src/ test/ --ext .js",
     "test:no-lint": "cross-env LAUNCHPAD_BROWSERS=firefox wct --skip-plugin sauce -p",
     "test": "npm run test:lint && npm run test:no-lint",
-    "publish-location": "node publishLocation | peanut-gallery -t $GITHUB_RELEASE_TOKEN -p",
+    "publish-location": "node publishLocation",
     "prepublish-release": "npm run build",
     "publish-release": "frau-publisher && npm run publish-location"
   },
@@ -44,7 +44,6 @@
     "gulp-change": "^1.0.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^3.0.0",
-    "peanut-gallery": "^1.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "web-component-tester": "^6.0.0"
