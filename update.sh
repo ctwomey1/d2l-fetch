@@ -27,11 +27,8 @@ if [[ $lastLogMessage =~ $majorRegex ]]; then
 	minorVersion=0
 	patchVersion=0
 elif [[ $lastLogMessage =~ $patchRegex ]]; then
-	majorVersion=0
-	minorVersion=0
 	patchVersion=$((patchVersion + 1))
 else
-	majorVersion=0
 	minorVersion=$((minorVersion + 1))
 	patchVersion=0
 fi
