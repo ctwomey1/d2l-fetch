@@ -11,7 +11,7 @@ var deumdify = require('deumdify');
 
 // make the global variable assignment conditional on if it has already been assigned
 function windowify(content) {
-	return content.replace('g\.d2lfetch\s*=\s*f\(\)', 'g.d2lfetch = g.d2lfetch || f()');
+	return content.replace(/g\.d2lfetch\s*=\s*f\(\)/, 'g.d2lfetch = g.d2lfetch || f()');
 }
 
 gulp.task('scripts', function() {
