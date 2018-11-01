@@ -3,7 +3,6 @@ node_js: stable
 addons:
   firefox: latest
 script:
-- npm run build
 - npm run test:lint
 - xvfb-run wct --npm --skip-plugin sauce
 - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then wct --npm --skip-plugin local; fi'
