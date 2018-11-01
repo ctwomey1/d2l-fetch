@@ -5,8 +5,8 @@ addons:
 script:
 - npm run build
 - npm run test:lint
-- xvfb-run wct --skip-plugin sauce
-- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then wct --skip-plugin local; fi'
+- xvfb-run wct --npm --skip-plugin sauce
+- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then wct --npm --skip-plugin local; fi'
 - ./update.sh
 env:
   global:
