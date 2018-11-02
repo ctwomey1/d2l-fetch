@@ -7,34 +7,20 @@ Provides support for wrapping window.fetch calls within middleware functions.
 yarn install
 ```
 
-## Build
-
-```sh
-npm run build
-```
-
-This creates files in the `/dist/` directory ready for consumption.
-
 ## Usage
 
 Reference the script in your html:
 
 ```html
-<script src="../dist/d2lfetch.js"></script>
+<script type="module" src="../d2l-fetch/d2l-fetch.js"></script>
 ```
 
 This will add a `d2lfetch` object to the global scope, with two methods: `use` and `fetch`.
 
-Alternatively, you can install `d2l-fetch` via bower:
+Alternatively, you can reference the global d2lfetch instance via es6 import
 
-```sh
-bower install Brightspace/d2l-fetch
-```
-
-and reference it as you would any other package:
-
-```html
-<link rel="import" href="../d2l-fetch/d2l-fetch.html">
+```javascript
+import { d2lfetch } from '../d2l-fetch/src/index.js';
 ```
 
 ### Use
@@ -185,7 +171,3 @@ We recommend:
 
 * [fetch](https://github.com/github/fetch)
 * [promise-polyfill](https://github.com/PolymerLabs/promise-polyfill/)
-
-## Publishing
-
-The application will automatically increment the minor build version and publish a release version to the Brightspace CDN after merge to the `master` branch is complete. If you wish to increment the `patch` or `major` version instead please add **[increment patch]** or **[increment major]** to the notes inside your merge message.
