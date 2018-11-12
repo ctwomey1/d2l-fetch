@@ -1,2 +1,2 @@
 import { D2LFetch } from './d2lfetch';
-module.exports = new D2LFetch();
+export const d2lfetch = new D2LFetch();
