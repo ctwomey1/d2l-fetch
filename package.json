@@ -14,6 +14,7 @@
     "eslint": "^3.19.0",
     "eslint-config-brightspace": "^0.2.4",
     "eslint-plugin-html": "^2.0.1",
+    "frau-ci": "^1.33.2",
     "wct-browser-legacy": "^1.0.2",
     "web-component-tester": "^6.0.0"
   },
