@@ -1,13 +1,13 @@
 {
   "name": "d2l-fetch",
-  "description": "Provides support for wrapping window.fetch calls within middleware functions",
+  "description": "Provides support for wrapping fetch calls within middleware functions",
   "main": "src/d2lfetch.js",
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "scripts": {
     "test:lint": "eslint d2l-fetch.js src/ test/ --ext .js",
-    "test:no-lint": "cross-env LAUNCHPAD_BROWSERS=firefox wct --skip-plugin sauce -p",
-    "test": "npm run test:lint && npm run test:no-lint"
+    "test:wct": "cross-env LAUNCHPAD_BROWSERS=firefox wct --npm --skip-plugin sauce",
+    "test": "npm run test:lint && npm run test:wct"
   },
   "devDependencies": {
     "cross-env": "^5.0.0",

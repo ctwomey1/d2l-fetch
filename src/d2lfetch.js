@@ -1,6 +1,7 @@
 export class D2LFetch {
 
-	constructor() {
+	constructor(fetchImpl) {
+		this._fetch = fetchImpl;
 		this._installedMiddlewares = [];
 	}
 
@@ -13,7 +14,7 @@ export class D2LFetch {
 		}
 
 		const chain = this._installedMiddlewares.slice();
-		chain.push({ name: 'fetch', fn: this._wrapMiddleware(window.fetch) });
+		chain.push({ name: 'fetch', fn: this._wrapMiddleware(this._fetch || window.fetch) });
 		return chain.shift().fn.bind(this, chain)(input);
 	}
 
