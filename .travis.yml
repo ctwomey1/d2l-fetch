@@ -4,11 +4,29 @@ addons:
   firefox: latest
 script:
 - npm run test:lint
-- xvfb-run wct --npm --skip-plugin sauce
-- 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then wct --npm --skip-plugin local; fi'
-- ./update.sh
+- |
+  if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_SECURE_ENV_VARS == true ]; then
+    echo "Pull request with secure environment variables, running Sauce tests...";
+    wct --npm --skip-plugin local || travis_terminate 1;
+  else
+    echo "Not a pull request and/or no secure environment variables, running headless tests...";
+    xvfb-run wct --npm --skip-plugin sauce || travis_terminate 1;
+  fi
+- |
+  if [ "$TRAVIS_BRANCH" == "master" ] && [ $TRAVIS_PULL_REQUEST == false ]; then
+    echo "Not a Pull Request and on branch master so bumping version";
+    frauci-update-version;
+    export TRAVIS_TAG=$(frauci-get-version)
+  fi
+deploy:
+  provider: releases
+  api_key: "$GITHUB_RELEASE_TOKEN"
+  on:
+    tags: true
 env:
   global:
+  - OWNER_NAME=Brightspace
+  - REPO_NAME=d2l-fetch
   # SAUCE_USERNAME
   - secure: 9NEfhUpW6pf647+Yx0a1hztJlJUVjgsm+gxnwtcF2e+5bhJPrX8c6yL6YSLwatI+ZUWdX39D2K+AXA8Vt/dCyx6KXTxUYLIKu/sfu21RpfArt9XLei+ykc9EM3pWaYA1vZ36LVhoh+7Yw7/hHhPeANUbn9cgl7yfxvDxJpObom02E51IaFgfPYEK9gmeBgbnMHCAJfY1dUEVI6RQ7yg7RtRaGXjd5hDG0Z5BGhyBgdIfmONx1bSvh0ULlyj0a0SZvooi7VrniNU94iZCKNv814PZIA/HnfwbtorRXLQgOLIjLZAQewJ3bzv1xJYqNnK+z/W7b13T2Q+nvTBC8OeYAd4RubZkaZYjrnlZGYB22FWGnsNY61S3A66tAXZTIiOK3iXy/uR7tZvLxIBRa5fU2RBzAMxTNfE1CYRzgujxSFrgGzsw1Yjq21hbIkEzSLx+E1P4HBCmfX+qgcWsqgKruZ57OHKGhtB2D3tLVbEOnVwyAEB6z2BvpLurGWD6DRmJ8aUzUMOGY8kxWIKnqGf6eUSOpDJXyFSIch4EJvrVrzGNyOWok+bqzfDl4h6RdBASG8NafGtlXLRpBUReL8nQzwsHg6OYtOG8PYBNBbBuDGCdLKOIrda1nf+QCkV6hc81PExdGyiXFJ+ES0yPi6E5D7lp66g+wE/5gN9uafV2U5A=
   # SAUCE_ACCESS_KEY
