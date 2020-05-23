@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "test:lint": "eslint d2l-fetch.js src/ test/ --ext .js",
-    "test:no-lint": "cross-env LAUNCHPAD_BROWSERS=firefox wct --skip-plugin sauce -p",
+    "test:no-lint": "cross-env LAUNCHPAD_BROWSERS=firefox polymer test --npm --skip-plugin sauce -p",
     "test": "npm run test:lint && npm run test:no-lint"
   },
   "devDependencies": {
@@ -15,6 +15,7 @@
     "eslint-config-brightspace": "^0.2.4",
     "eslint-plugin-html": "^2.0.1",
     "frau-ci": "^1.33.2",
+    "polymer-cli": "^1.9.11",
     "wct-browser-legacy": "^1.0.2",
     "web-component-tester": "^6.0.0"
   },

@@ -48,6 +48,10 @@ describe('d2l-fetch', function() {
 	};
 
 	var earlyExitMiddleware = function() {
+		return Promise.resolve();
+	};
+
+	var invalidResponseMiddleware = function() {
 		return;
 	};
 
@@ -267,6 +271,10 @@ describe('d2l-fetch', function() {
 			it('should throw a TypeError if it is not passed a valid middleware object', function() {
 				expect(function() { window.d2lfetch.addTemp(input); }).to.throw(TypeError);
 			});
+		});
+
+		it('should throw a TypeError if middleware does not return a Promise', function() {
+			expect(function() { window.d2lfetch.addTemp(invalidResponseMiddleware); }).to.throw(TypeError);
 		});
 
 		it('should add a new middleware to installed middlewares of the new D2LFetch object', function() {

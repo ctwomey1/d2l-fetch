@@ -4,6 +4,11 @@ export class D2LFetch {
 		this._installedMiddlewares = [];
 	}
 
+	/**
+	 *
+	 * @param {string | Request} input
+	 * @param {RequestInit} [options]
+	 */
 	fetch(input, options) {
 		if ('string' === typeof input) {
 			input = new Request(input, options);
@@ -47,7 +52,13 @@ export class D2LFetch {
 			if (chain && chain.length !== 0) {
 				next = chain.shift().fn.bind(this, chain);
 			}
-			return fn(request, next, options);
+			const result = fn(request, next, options);
+
+			if (result instanceof Promise === false) {
+				throw TypeError('Middleware did not return Promise');
+			}
+
+			return result;
 		};
 	}
 
@@ -60,8 +71,8 @@ export class D2LFetch {
 			} else {
 				throw TypeError('Middleware name/function is undefined or not a string/function');
 			}
-		} else {
-			throw TypeError('Middleware parameter is undefined/null/empty or not an object');
 		}
+
+		throw TypeError('Middleware parameter is undefined/null/empty or not an object');
 	}
 }
