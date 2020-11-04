@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "cross-env": "^5.0.0",
-    "eslint": "^3.19.0",
+    "eslint": "^4.18.2",
     "eslint-config-brightspace": "^0.2.4",
     "eslint-plugin-html": "^2.0.1",
     "frau-ci": "^1.33.2",
