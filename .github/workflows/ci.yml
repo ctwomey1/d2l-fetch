@@ -34,8 +34,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-    - name: Headless Tests
-      run: npm run test:local
+      - name: Headless Tests
+        run: npm run test:local
   unit:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     name: Unit Tests
@@ -52,8 +52,8 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-    - name: tests
-      run: npm run test:ci
-      env:
-        SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY_DESIRE2LEARN }}
-        SAUCE_USERNAME: Desire2Learn
+      - name: tests
+        run: npm run test:ci
+        env:
+          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY_DESIRE2LEARN }}
+          SAUCE_USERNAME: Desire2Learn
