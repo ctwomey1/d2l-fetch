@@ -20,4 +20,4 @@ jobs:
         uses: BrightspaceUI/actions/incremental-release@master
         with:
           GITHUB_TOKEN: ${{ secrets.D2L_GITHUB_TOKEN }}
-      DRY_RUN: true
+          DRY_RUN: true
